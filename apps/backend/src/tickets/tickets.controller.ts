@@ -19,7 +19,7 @@ export class TicketsController {
   constructor(private readonly ticketsService: TicketsService) {}
 
   @Post()
-  async create(@Request() req, @Body() body: any) {
+  async create(@Request() req: any, @Body() body: any) {
     return this.ticketsService.create(
       body.title,
       body.description,

@@ -8,7 +8,7 @@ export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
   @Post()
-  async create(@Request() req, @Body() body: { content: string; ticketId: string }) {
+  async create(@Request() req: any, @Body() body: { content: string; ticketId: string }) {
     return this.commentsService.create(body.content, body.ticketId, req.user.userId);
   }
 
