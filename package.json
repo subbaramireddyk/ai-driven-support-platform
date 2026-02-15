@@ -1,0 +1,35 @@
+{
+  "name": "ai-driven-support-platform",
+  "version": "1.0.0",
+  "description": "AI-driven support platform alternative to ServiceNow/JSM for DevOps teams",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspaces",
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces",
+    "lint": "npm run lint --workspaces",
+    "backend:dev": "npm run dev --workspace=apps/backend",
+    "frontend:dev": "npm run dev --workspace=apps/frontend",
+    "docker:up": "docker-compose -f infrastructure/docker/docker-compose.yml up -d",
+    "docker:down": "docker-compose -f infrastructure/docker/docker-compose.yml down",
+    "prisma:generate": "npm run prisma:generate --workspace=apps/backend",
+    "prisma:migrate": "npm run prisma:migrate --workspace=apps/backend"
+  },
+  "keywords": [
+    "ai",
+    "support-platform",
+    "devops",
+    "servicenow",
+    "nestjs",
+    "nextjs"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}

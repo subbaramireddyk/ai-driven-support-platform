@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("USER")
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  requestedTickets Ticket[]       @relation("TicketRequester")
+  assignedTickets  Ticket[]       @relation("TicketAssignee")
+  comments         Comment[]
+  notifications    Notification[]
+}
+
+model Ticket {
+  id                   String   @id @default(uuid())
+  title                String
+  description          String   @db.Text
+  status               String   @default("OPEN")
+  priority             String   @default("MEDIUM")
+  toolchain            String?
+  requesterId          String
+  assigneeId           String?
+  aiSuggestion         String?  @db.Text
+  selfServiceAvailable Boolean  @default(false)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  requester User      @relation("TicketRequester", fields: [requesterId], references: [id])
+  assignee  User?     @relation("TicketAssignee", fields: [assigneeId], references: [id])
+  comments  Comment[]
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  content   String   @db.Text
+  ticketId  String
+  authorId  String
+  mentions  String[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  author User   @relation(fields: [authorId], references: [id])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  type      String
+  userId    String
+  ticketId  String?
+  commentId String?
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model KnowledgeBase {
+  id          String   @id @default(uuid())
+  toolchain   String
+  title       String
+  content     String   @db.Text
+  embeddings  String?  @db.Text
+  url         String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
